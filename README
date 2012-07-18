@@ -1,0 +1,16 @@
+vorb-dbg is a new open source debugger written in C++ for linux. 
+It uses ptrace and has no dependencies. To compile, just run:
+
+  ./compile
+
+It is currently designed for 32-bit systems but once it is more
+stable I will add 64-bit support. To run:
+
+  dev@crunchbang-dev:~/vorb-dbg$ ./debugger 
+  Usage: ./debugger [option] [options]
+   -a/--attach <pid> -- attach to process
+   -c/--create <create process> <process arguments> -- create process
+   -h/--help -- display this message
+  dev@crunchbang-dev:~/vorb-dbg$ 
+
+All source is licensed under the GNUv2 License.
