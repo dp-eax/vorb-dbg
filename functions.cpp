@@ -38,6 +38,7 @@ int dbg::detach()
 {
   ptrace(PTRACE_DETACH, pid, NULL, NULL);
   printf("Detached from %d\n", pid);
+  attached = 0;
 }
 
 int dbg::getregs(int print)

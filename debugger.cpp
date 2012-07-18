@@ -145,13 +145,26 @@ int dbg::getcmd(char *cmd)
     printf("print <address>      -- print data at address\n");
     printf("continue             -- continue process\n");
     printf("help                 -- print this message\n");
+    printf("exit/quit            -- quit the program\n");
     return 0;
   }
   else if(strcmp(cmd_split[0], "c") == 0 || strcmp(cmd_split[0], "continue") == 0 || strcmp(cmd_split[0], "\n") == 0)
   {
     return 1;
   }
-
+  else if(strcmp(cmd_split[0], "exit") == 0 || strcmp(cmd_split[0], "quit") == 0 
+    || strcmp(cmd_split[0], "e") == 0 || strcmp(cmd_split[0], "q") == 0)
+  {
+    if(attached == 1)
+    {
+      printf("Please detach from the program first.\n");
+      return 1;
+    }
+    else
+    {
+      exit(0);
+    }
+  }  
   else
   {
     printf("Unknown command, type help.\n");

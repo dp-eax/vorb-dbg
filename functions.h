@@ -24,12 +24,14 @@
 class dbg
 {
   int pid;
+  int attached;
   struct user_regs_struct regs;
   siginfo_t siginfo;
 
   public:
     dbg(int init_pid, char *file_name, char *arguments[], int argc)
     {
+      attached = 1;
       pid = init_pid;
       if(pid == 0)
         create_process(file_name, arguments, argc);
