@@ -27,11 +27,14 @@ class dbg
   int attached;
   struct user_regs_struct regs;
   siginfo_t siginfo;
+  long breakpoints[8][2];
+  int num_breakpoints;
 
   public:
     dbg(int init_pid, char *file_name, char *arguments[], int argc)
     {
       attached = 1;
+      num_breakpoints = 0;
       pid = init_pid;
       if(pid == 0)
         create_process(file_name, arguments, argc);
@@ -49,6 +52,8 @@ class dbg
     int getregs(int print);
     long peekdata(void *addr);
     int pokedata(void *addr, void *data);
+    int rm_breakpoint(long addr, int hit);
+    int list_breakpoints();
     int step();
 };
 

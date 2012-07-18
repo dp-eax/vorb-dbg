@@ -39,6 +39,8 @@ int dbg::attach()
       break;
     }
     getsiginfo();
+    if(siginfo.si_signo == 5)
+      rm_breakpoint(regs.eip-1, 1);
     printf("Caught %s\n", strsignal(siginfo.si_signo));
     cont();
   }
@@ -76,7 +78,6 @@ int dbg::create_process(char *file_name, char *arguments[], int argc)
     for(;;)
     {
       wait(&status);
-      while(getcmd(cmd) != 1) {}
       getregs(1);
       printf("Continuing from: %x\n", regs.eip);
       if(WIFEXITED(status))
@@ -86,6 +87,9 @@ int dbg::create_process(char *file_name, char *arguments[], int argc)
       }
       getsiginfo();
       printf("Caught %s\n", strsignal(siginfo.si_signo));
+      if(siginfo.si_signo == 5)
+        rm_breakpoint(regs.eip-1, 1);
+      while(getcmd(cmd) != 1) {}
       cont();
     }
     detach();
@@ -148,6 +152,16 @@ int dbg::getcmd(char *cmd)
     printf("exit/quit            -- quit the program\n");
     return 0;
   }
+  else if(strcmp(cmd_split[0], "breakpoints") == 0 || strcmp(cmd_split[0], "breaks") == 0)
+  {
+    list_breakpoints();
+    return 0;
+  }
+  else if(strcmp(cmd_split[0], "rm") == 0)
+  {
+    rm_breakpoint(strtoll(cmd_split[1], NULL, 16), 0);
+    return 0;
+  }
   else if(strcmp(cmd_split[0], "c") == 0 || strcmp(cmd_split[0], "continue") == 0 || strcmp(cmd_split[0], "\n") == 0)
   {
     return 1;
@@ -158,7 +172,7 @@ int dbg::getcmd(char *cmd)
     if(attached == 1)
     {
       printf("Please detach from the program first.\n");
-      return 1;
+      return 0;
     }
     else
     {
