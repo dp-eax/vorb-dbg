@@ -28,15 +28,16 @@ class dbg
   siginfo_t siginfo;
 
   public:
-    dbg(int pid, char *file_name, char *arguments[], int argc)
+    dbg(int init_pid, char *file_name, char *arguments[], int argc)
     {
+      pid = init_pid;
       if(pid == 0)
         create_process(file_name, arguments, argc);
       else
-        attach(pid);
+        attach();
     }
 
-    int attach(int pid);
+    int attach();
     int breakpoint(long addr);
     int cont();
     int create_process(char *file_name, char *arguments[], int argc);

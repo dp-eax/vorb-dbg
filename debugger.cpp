@@ -22,7 +22,7 @@
 
 void usage(char *program_name);
 
-int dbg::attach(int pid)
+int dbg::attach()
 {
   int status;
   char cmd[100];
