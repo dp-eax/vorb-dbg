@@ -1,1 +1,1 @@
-gcc -odebugger debugger.c functions.c -std=gnu99 -I /usr/include/glib-2.0 -I /usr/lib/glib-2.0/include/
+g++ -odebugger debugger.cpp functions.cpp

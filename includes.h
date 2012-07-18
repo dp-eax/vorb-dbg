@@ -10,6 +10,4 @@
 #include <sys/user.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <regex.h>
-#include <glib.h>
 #endif
