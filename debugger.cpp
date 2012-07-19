@@ -132,24 +132,24 @@ int dbg::getcmd(char *cmd)
   else if(strcmp(cmd_split[0], "set") == 0 && i == 3)
   {
     pokedata((void *)(int)strtoll(cmd_split[1], NULL, 16), (void *)(int)strtoll(cmd_split[2], NULL, 16));
-    printf("%s: %lx\n", cmd_split[1], peekdata((void *)(int)strtoll(cmd_split[1], NULL, 16)));
+    printf("%s: %lx\n", cmd_split[1], peekdata((void *)(int)strtoll(cmd_split[1], NULL, 16), 0));
     return 0;
   }
-  else if(strcmp(cmd_split[0], "print") == 0 && i == 2)
+  else if(strcmp(cmd_split[0], "print") == 0 && i == 3)
   {
-    printf("%s: %lx\n", cmd_split[1], peekdata((void *)(int)strtoll(cmd_split[1], NULL, 16)));
+    peekdata((void *)(int)strtoll(cmd_split[2], NULL, 16), atoi(cmd_split[1]));
     return 0;
   }
   else if(strcmp(cmd_split[0], "h") == 0 || strcmp(cmd_split[0], "help") == 0)
   {
-    printf("detach               -- detach from process\n");
-    printf("break <address>      -- set breakpoint\n");
-    printf("regs                 -- print registers\n");
-    printf("set <address> <data> -- set address to data\n");
-    printf("print <address>      -- print data at address\n");
-    printf("continue             -- continue process\n");
-    printf("help                 -- print this message\n");
-    printf("exit/quit            -- quit the program\n");
+    printf("detach                            -- detach from process\n");
+    printf("break <address>                   -- set breakpoint\n");
+    printf("regs                              -- print registers\n");
+    printf("set <address> <data>              -- set address to data\n");
+    printf("print <number of words> <address> -- print data at address\n");
+    printf("continue                          -- continue process\n");
+    printf("help                              -- print this message\n");
+    printf("exit/quit                         -- quit the program\n");
     return 0;
   }
   else if(strcmp(cmd_split[0], "breakpoints") == 0 || strcmp(cmd_split[0], "breaks") == 0)

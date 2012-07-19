@@ -50,7 +50,7 @@ class dbg
     int getcmd(char *cmd);
     int getsiginfo();
     int getregs(int print);
-    long peekdata(void *addr);
+    long peekdata(void *addr, int numbytes);
     int pokedata(void *addr, void *data);
     int rm_breakpoint(long addr, int hit);
     int list_breakpoints();

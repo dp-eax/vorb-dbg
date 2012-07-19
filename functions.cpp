@@ -22,13 +22,11 @@
 int dbg::breakpoint(long addr)
 {
   printf("Inserting breakpoint %d at %x\n", num_breakpoints, addr);
-  long data = peekdata((void*)addr);
+  long data = peekdata((void*)addr, 0);
   breakpoints[num_breakpoints][0] = addr;
   breakpoints[num_breakpoints][1] = data;
   num_breakpoints++;
   pokedata((void*)addr, (void*)0xcccccccc);
-  data = peekdata((void*)addr);
-  printf("%lx\n", data);
 }
 
 int dbg::rm_breakpoint(long addr, int hit)
@@ -38,7 +36,7 @@ int dbg::rm_breakpoint(long addr, int hit)
     if(breakpoints[i][0] == addr)
     {
       pokedata((void*)addr, (void*)breakpoints[i][1]);
-      printf("Removed breakpoint %d at %lx, data is now: %lx\n", i, addr, peekdata((void*)addr));
+      printf("Removed breakpoint %d at %lx, data is now: %lx\n", i, addr, peekdata((void*)addr, 0));
       i++;
       for(i; i < num_breakpoints; i++)
       {
@@ -87,9 +85,28 @@ int dbg::getsiginfo()
   ptrace(PTRACE_GETSIGINFO, pid, NULL, &siginfo);
 }
 
-long dbg::peekdata(void *addr)
+long dbg::peekdata(void *addr, int numwords)
 {
-  return ptrace(PTRACE_PEEKDATA, pid, addr, NULL);
+  if(numwords == 0)
+    return ptrace(PTRACE_PEEKDATA, pid, addr, NULL);
+  else
+  {
+    int j = 0;
+    for(int i=0; i < numwords*4; i=i+4)
+    {
+      if(j == 0)
+        printf("%lx: ", (long)addr+i);
+      printf(" %.8lx", ptrace(PTRACE_PEEKDATA, pid, (void*)((long)addr+i), NULL));
+      j++;
+      if(j == 11)
+      {
+        printf("\n");
+        j = 0;
+      }
+    }
+    if(j != 0)
+      printf("\n");
+  }
 }
 
 int dbg::pokedata(void *addr, void *data)
