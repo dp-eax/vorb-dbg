@@ -88,7 +88,7 @@ int dbg::create_process(char *file_name, char *arguments[], int argc)
       getsiginfo();
       printf("Caught %s\n", strsignal(siginfo.si_signo));
       if(siginfo.si_signo == 5)
-        rm_breakpoint(regs.eip-1, 1);
+        rm_breakpoint(regs.eip, 1);
       while(getcmd(cmd) != 1) {}
       cont();
     }
