@@ -42,7 +42,6 @@ int dbg::breakpoint(long addr)
 
 int dbg::rm_breakpoint(long addr, int hit)
 {
-  printf("HAI GUISE HERP DERP\n");
   for(int i=0;i < num_breakpoints; i++)
   {
     if(breakpoints[i][0] == addr)
