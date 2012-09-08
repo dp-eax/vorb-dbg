@@ -22,7 +22,7 @@
 
 void usage(char *program_name);
 
-int dbg::attach()
+void dbg::attach()
 {
   int status;
   char cmd[100];
@@ -79,7 +79,6 @@ int dbg::create_process(char *file_name, char *arguments[], int argc)
     {
       wait(&status);
       getregs(1);
-      printf("Continuing from: %x\n", regs.eip);
       if(WIFEXITED(status))
       {
         printf("Process exited\n");
@@ -88,7 +87,23 @@ int dbg::create_process(char *file_name, char *arguments[], int argc)
       getsiginfo();
       printf("Caught %s\n", strsignal(siginfo.si_signo));
       if(siginfo.si_signo == 5)
-        rm_breakpoint(regs.eip, 1);
+      {
+        if (pending_breakpoint != -1)
+        {
+          pokedata((void*)breakpoints[pending_breakpoint][0], 
+                   (void*)((breakpoints[pending_breakpoint][1] & 0xffffff00) | 0xcc));
+          pending_breakpoint = -1;
+          // if we only stopped to reenable the breakpoint, continue
+          if (ignore_step)
+          {
+            ignore_step = false;
+            cont();
+            continue;
+          }
+        }
+        rm_breakpoint(regs.eip - 1, 1);
+      }
+      printf("Stopped at: %x\n", regs.eip);
       while(getcmd(cmd) != 1) {}
       cont();
     }

@@ -1,1 +1,1 @@
-g++ -odebugger debugger.cpp functions.cpp
+g++ -m32 -g -Wall -odebugger debugger.cpp functions.cpp

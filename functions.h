@@ -29,12 +29,16 @@ class dbg
   siginfo_t siginfo;
   long breakpoints[8][2];
   int num_breakpoints;
+  int pending_breakpoint;
+  bool ignore_step;
 
   public:
     dbg(int init_pid, char *file_name, char *arguments[], int argc)
     {
       attached = 1;
       num_breakpoints = 0;
+      pending_breakpoint = -1;
+      ignore_step = 0;
       pid = init_pid;
       if(pid == 0)
         create_process(file_name, arguments, argc);
@@ -42,18 +46,18 @@ class dbg
         attach();
     }
 
-    int attach();
-    int breakpoint(long addr);
+    void attach();
+    void breakpoint(long addr);
     int cont();
     int create_process(char *file_name, char *arguments[], int argc);
-    int detach();
+    void detach();
     int getcmd(char *cmd);
-    int getsiginfo();
-    int getregs(int print);
+    void getsiginfo();
+    void getregs(int print);
     long peekdata(void *addr, int numbytes);
-    int pokedata(void *addr, void *data);
-    int rm_breakpoint(long addr, int hit);
-    int list_breakpoints();
+    void pokedata(void *addr, void *data);
+    void rm_breakpoint(long addr, int hit);
+    void list_breakpoints();
     int step();
 };
 
